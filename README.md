@@ -5,6 +5,7 @@
 ![image]()
 
 2. Curva caracteristica de um LDR.
+
 ![image]()
 
 3.
