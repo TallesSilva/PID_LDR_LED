@@ -1,2 +1,4 @@
 # PID_LDR_LED
-iueheuhfuiehfuieh
+
+1. Código de controle da resistência de um LDR (Light Dependent Resistor) através da intensidade luminosa de um LED.
+![image]()
