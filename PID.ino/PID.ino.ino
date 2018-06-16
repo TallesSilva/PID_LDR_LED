@@ -20,6 +20,7 @@ void loop() {
   pot = 0;
   ldr = 0;
   
+  // filtro média movel para evitar ruidos
   for (int ii = 0; ii < 50; ii++) {
     pot += (double) (analogRead(potenciometro) >> 2) / 50.0;
     ldr += (double) (analogRead(fotoresistor) >> 2) / 50.0;
