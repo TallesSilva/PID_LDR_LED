@@ -20,19 +20,16 @@ void loop() {
   pot = 0;
   ldr = 0;
 
-  // filtro média movel para evitar ruidos
-  for (int ii = 0; ii < 50; ii++) {
-    pot += (double) (analogRead(potenciometro) >> 2) / 50.0;
-    ldr += (double) (analogRead(fotoresistor) >> 2) / 50.0;
-    erro += (pot - ldr) / 50.0;
+  for (int ii = 0; ii < 5; ii++) {
+    pot += (double) (analogRead(potenciometro) >> 2)/5;
+    ldr += (double) (analogRead(fotoresistor) >> 2) /5;
+    erro += (pot - ldr) / 5.0;
   }
 
-// calculo da constante de tempo para integração do I
   delta = (millis() - last) / 1000;
   last = millis();
-  P += (erro * 0.4) ;
-  I += ((erro * 15) * delta );
-  //D não foi usado para não amplificar ruidos oriundos
+  P += (erro * 0.7) ;
+  I += ((erro * 10) * delta );
   pi = P + I ;
 
 
@@ -41,11 +38,11 @@ void loop() {
 
   analogWrite(led, pi);
 
-// Serial Plotter em gráfico própria do arduino
   Serial.print(pot);
   Serial.print(" ");
   Serial.print(ldr);
   Serial.print(" ");
   Serial.println(erro);
+
 
 }
