@@ -29,7 +29,7 @@ void loop() {
   delta = (millis() - last) / 1000;
   last = millis();
   P += (erro * 0.7) ;
-  I += ((erro * 10) * delta );
+  I += ((erro * 15) * delta );
   pi = P + I ;
 
 
@@ -42,7 +42,11 @@ void loop() {
   Serial.print(" ");
   Serial.print(ldr);
   Serial.print(" ");
-  Serial.println(erro);
+  Serial.print(pi);
+  Serial.print(" ");
+  Serial.print(erro);
+  Serial.print(" ");
+  Serial.println(I);
 
 
 }
