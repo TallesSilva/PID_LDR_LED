@@ -1,8 +1,8 @@
-double P, I = 0, pi = 0;
+double P = 0, I = 0, pi = 0;
 double erro;
-double pot;
-double ldr;
-double last, delta;
+float pot;
+float ldr;
+double last = 0, delta;
 double led = 9;
 double fotoresistor = A0;
 double potenciometro = A1;
@@ -16,25 +16,31 @@ void setup() {
 }
 
 void loop() {
+  // Declarando valores iniciando com 0 para não acumular os valores anteriores aos novos valores
   erro = 0;
   pot = 0;
   ldr = 0;
 
-  for (int ii = 0; ii < 5; ii++) {
-    pot += (double) (analogRead(potenciometro) >> 2)/5;
-    ldr += (double) (analogRead(fotoresistor) >> 2) /5;
-    erro += (pot - ldr) / 5.0;
+  for (int ii = 0; ii < 50; ii++) { // Filtro media movel para filtrar ruidos e o sinal PWM do LED, assim ele calcula o valor eficaz e corrige o valor de entrada do sinal
+    ldr += (double) (analogRead(fotoresistor) >> 2) / 50; // leitura do valor do LDR em 10 bits, convertida para 8 bits
+    pot += (double) (analogRead(potenciometro) >> 2) / 50;
+  }; // realimentação da entrada menos a saida
+  erro = (pot - ldr); // leitura do valor do potenciometro
+
+  delta = (millis() - last) / 1000.0; // constante de tempo utilizada no integrador
+  last = millis(); // atualiza o valor antigo
+  P = (erro * 0.3) ; // kp
+  I += ((erro * 15) * delta ); // ki; I=I+novoI
+  pi = P + I ; // PI
+
+
+  if (pi < 0)
+  {
+    pi = 0; // se pi<0 ele recebe 0
+  } if (pi > 255)
+  {
+    pi = 255; // se pi>255 ele recebe 255
   }
-
-  delta = (millis() - last) / 1000;
-  last = millis();
-  P += (erro * 0.7) ;
-  I += ((erro * 15) * delta );
-  pi = P + I ;
-
-
-  pi = pi < 0 ? 0 : pi; // se pi<0 ele recebe 0
-  pi = pi > 255 ? 255 : pi; // se pi>255 ele recebe 255
 
   analogWrite(led, pi);
 
